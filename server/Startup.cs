@@ -40,7 +40,7 @@ namespace Server_GM_IMP
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
