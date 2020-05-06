@@ -1,5 +1,11 @@
 @import '_reset.scss';
+@import '_variables.scss';
+
+html {
+  font-size: .8vw
+}
 
 body {
-  background-color: pink;
+  display: block;
+  font-family: 'Roboto', sans-serif;
 }

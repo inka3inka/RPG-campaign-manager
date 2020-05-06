@@ -1,18 +1,20 @@
-import React, {Component} from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import './scss/index.scss';
+import NavTab from './src/navTab/index'
 
 
 //App
 
-class App extends Component{
-  render() {
+function App() {
+
+  const [counter, setcounter] = useState(10);
+
     return (
       <div>
-      Hello
+        <NavTab/>
       </div>
   )
-  }
 }
 
 ReactDOM.render(
