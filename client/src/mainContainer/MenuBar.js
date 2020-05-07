@@ -2,7 +2,7 @@ import React from 'react';
 import { HashRouter as Router , Route } from'react-router-dom';
 import ContainerElement from './ContainerElement.js';
 import HomePage from './HomePage';
-import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import SideNav, { NavItem, NavIcon, NavText, Toggle, Nav } from '@trendmicro/react-sidenav';
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 
 export default function MenuBar() {
@@ -17,6 +17,7 @@ export default function MenuBar() {
                 history.push(to);
               }
             }}
+            style={{backgroundColor: "navy"}}
           >
             <SideNav.Toggle />
             <SideNav.Nav defaultSelected="home">
@@ -30,7 +31,7 @@ export default function MenuBar() {
               </NavItem>
               <NavItem eventKey="devices">
                 <NavIcon>
-                  <i className="fa fa-fw fa-device" style={{ fontSize: '1.75em' }} />
+                  <i className="fa fa-fw fa-tablet" style={{ fontSize: '1.75em' }} />
                 </NavIcon>
                 <NavText>
                   Devices
