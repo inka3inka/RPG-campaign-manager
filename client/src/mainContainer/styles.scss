@@ -1,0 +1,12 @@
+@import '././scss/variables.scss';
+
+.container {
+  color: black;
+  display: flex;
+  flex-direction: row;
+  padding-left: 2.5vw;
+}
+
+.menu-bar {
+  background-color: $menu-background;
+}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import './scss/index.scss';
 import NavTab from './src/navTab/index'
+import MainContainer from "./src/mainContainer";
 
 
 //App
@@ -13,6 +14,7 @@ function App() {
     return (
       <div>
         <NavTab/>
+        <MainContainer/>
       </div>
   )
 }
