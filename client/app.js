@@ -12,7 +12,7 @@ function App() {
   const [counter, setcounter] = useState(10);
 
     return (
-      <div>
+      <div className="app-container">
         <NavTab/>
         <MainContainer/>
       </div>
