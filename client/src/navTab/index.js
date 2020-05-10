@@ -16,7 +16,6 @@ export default function NavTab() {
       <div className="nav-bar">
         <RightBar name="Sign in" />
         <RightBar name="Sign out" />
-        <RightBar name="Register" />
       </div>
     </div>
   )
