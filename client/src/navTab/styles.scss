@@ -1,0 +1,31 @@
+@import '././scss/variables.scss';
+
+.navtab {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: .2vw 1vw;
+  background-color: $nav-bar-main;
+  color: $nav-tab-font-color;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2000
+}
+
+.navtile {
+  padding: .5vw;
+  cursor: pointer;
+  margin-left: .5vw;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: $nav-bar-hover;
+  }
+
+}
+
+.nav-bar {
+  display: flex;
+  flex-direction: row;
+}

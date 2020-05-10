@@ -1,0 +1,11 @@
+@import '././scss/variables.scss';
+
+.container {
+  color: black;
+  display: flex;
+  flex-direction: row;
+  padding-left: 2.5vw;
+  background-color: purple;
+  width: 100%;
+  height: 100%
+}
