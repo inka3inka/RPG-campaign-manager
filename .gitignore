@@ -2,3 +2,5 @@
 node_modules
 /server/**/.vs
 /server/**/obj
+/server/**/bin
+/server/Server_GM_IMP.csproj.user

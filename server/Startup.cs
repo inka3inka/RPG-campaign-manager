@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Server_GM_IMP
 {
@@ -26,6 +27,12 @@ namespace Server_GM_IMP
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddSwaggerGen(
+                options =>
+            {
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {Title="Api documenation", Version="v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,6 +42,14 @@ namespace Server_GM_IMP
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(
+                options =>
+                {
+                    options.SwaggerEndpoint("swagger/v1/swagger.json", "API v1");
+                    options.RoutePrefix = string.Empty;
+                });
 
             app.UseHttpsRedirection();
 
