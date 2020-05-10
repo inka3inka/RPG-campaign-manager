@@ -4,3 +4,4 @@ node_modules
 /server/**/obj
 /server/**/bin
 /server/Server_GM_IMP.csproj.user
+server/packages-microsoft-prod.deb
