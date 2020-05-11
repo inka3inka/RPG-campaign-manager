@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Server_GM_IMP.Models
 {
-    public class AppSettings
+    public class ServerConfiguration
     {
-        public static AppSettings appSettings { get; set; }
         public string JwtSecret { get; set; }
         public string GoogleClientId { get; set; }
         public string GoogleClientSecret { get; set; }

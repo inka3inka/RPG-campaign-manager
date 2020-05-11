@@ -9,6 +9,7 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Server_GM_IMP.Models;
 using Server_GM_IMP.Services;
@@ -21,10 +22,12 @@ namespace Server_GM_IMP.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ServerConfiguration _serverConfiguration;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IConfiguration configuration)
         {
             _authService = authService;
+            _serverConfiguration = configuration.Get<ServerConfiguration>();
         }
 
         [AllowAnonymous]
@@ -40,11 +43,11 @@ namespace Server_GM_IMP.Controllers
 
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt(AppSettings.appSettings.JwtEmailEncryption,user.email)),
+                    new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt(_serverConfiguration.JwtEmailEncryption,user.email)),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AppSettings.appSettings.JwtSecret));
+                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_serverConfiguration.JwtSecret));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(String.Empty,
