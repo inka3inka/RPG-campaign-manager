@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Server_GM_IMP.Models;
 using Server_GM_IMP.Services;
@@ -23,11 +24,16 @@ namespace Server_GM_IMP.Controllers
     {
         private readonly IAuthService _authService;
         private readonly ServerConfiguration _serverConfiguration;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService, IConfiguration configuration)
+        public AuthController(
+            IAuthService authService, 
+            IConfiguration configuration,
+            ILogger<AuthController> logger)
         {
             _authService = authService;
             _serverConfiguration = configuration.Get<ServerConfiguration>();
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -36,10 +42,9 @@ namespace Server_GM_IMP.Controllers
         {
             try
             {
-                //SimpleLogger.Log("userView = " + userView.tokenId);
+                _logger.LogDebug($"Authorization by google with user token {userView.tokenId}");
                 var payload = GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
                 var user = await _authService.Authenticate(payload);
-                //SimpleLogger.Log(payload.ExpirationTimeSeconds.ToString());
 
                 var claims = new[]
                 {
@@ -62,7 +67,7 @@ namespace Server_GM_IMP.Controllers
             }
             catch (Exception ex)
             {
-                //Helpers.SimpleLogger.Log(ex);
+                _logger.LogDebug($"Authorization by google with user token {userView.tokenId} resulted in exception {ex}");
                 BadRequest(ex.Message);
             }
             return BadRequest();
