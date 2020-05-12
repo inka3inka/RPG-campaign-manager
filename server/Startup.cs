@@ -55,6 +55,10 @@ namespace Server_GM_IMP
 
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<UsersDbContext>();
+
+            //TODO: Move it somewhere appropriate
+            UsersDbContext usersDbContext = new UsersDbContext();
+            usersDbContext.Database.EnsureCreated();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
