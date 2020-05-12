@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Server_GM_IMP.Models.Users;
+using Server_GM_IMP.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Server_GM_IMP
@@ -50,6 +52,9 @@ namespace Server_GM_IMP
                         ValidateAudience = false
                     };
                 });
+
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<UsersDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

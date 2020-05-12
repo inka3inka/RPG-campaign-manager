@@ -7,3 +7,4 @@ node_modules
 server/packages-microsoft-prod.deb
 /Server_GM_IMP_Tests/**/bin
 /Server_GM_IMP_Tests/**/obj
+/server/users.db
