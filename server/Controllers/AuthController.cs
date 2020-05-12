@@ -9,6 +9,8 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Server_GM_IMP.Models;
 using Server_GM_IMP.Services;
@@ -21,10 +23,17 @@ namespace Server_GM_IMP.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly ServerConfiguration _serverConfiguration;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService)
+        public AuthController(
+            IAuthService authService, 
+            IConfiguration configuration,
+            ILogger<AuthController> logger)
         {
             _authService = authService;
+            _serverConfiguration = configuration.Get<ServerConfiguration>();
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -33,18 +42,17 @@ namespace Server_GM_IMP.Controllers
         {
             try
             {
-                //SimpleLogger.Log("userView = " + userView.tokenId);
+                _logger.LogDebug($"Authorization by google with user token {userView.tokenId}");
                 var payload = GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
-                var user = await _authService.Authenticate(payload);
-                //SimpleLogger.Log(payload.ExpirationTimeSeconds.ToString());
+                var user = await _authService.Authenticate(payload.Email, payload.Name);
 
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt(AppSettings.appSettings.JwtEmailEncryption,user.email)),
+                    new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt(_serverConfiguration.JwtEmailEncryption,user.email)),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(AppSettings.appSettings.JwtSecret));
+                var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_serverConfiguration.JwtSecret));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(String.Empty,
@@ -59,7 +67,7 @@ namespace Server_GM_IMP.Controllers
             }
             catch (Exception ex)
             {
-                //Helpers.SimpleLogger.Log(ex);
+                _logger.LogDebug($"Authorization by google with user token {userView.tokenId} resulted in exception {ex}");
                 BadRequest(ex.Message);
             }
             return BadRequest();
