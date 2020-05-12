@@ -44,7 +44,7 @@ namespace Server_GM_IMP.Controllers
             {
                 _logger.LogDebug($"Authorization by google with user token {userView.tokenId}");
                 var payload = GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
-                var user = await _authService.Authenticate(payload);
+                var user = await _authService.Authenticate(payload.Email, payload.Name);
 
                 var claims = new[]
                 {

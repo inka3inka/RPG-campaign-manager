@@ -8,6 +8,6 @@ namespace Server_GM_IMP.Services
 {
     public interface IAuthService
     {
-        Task<User> Authenticate(Google.Apis.Auth.GoogleJsonWebSignature.Payload payload);
+        Task<User> Authenticate(string email, string userName = "");
     }
 }
