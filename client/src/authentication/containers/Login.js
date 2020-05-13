@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { connect } from "react-redux";
 import { login } from "../actions/authActions";
-import config from '../../config.json';
+import config from '../../../config.json';
 import { withRouter, Redirect } from "react-router-dom";
+import './styles.scss';
 
 
 class Login extends Component {
@@ -46,17 +47,22 @@ class Login extends Component {
       ) :
       (
         <div>
-          <GoogleLogin
-            clientId={config.GOOGLE_CLIENT_ID}
-            buttonText="Google Login"
-            onSuccess={this.googleResponse}
-            onFailure={this.googleResponse}
-          />
+          <div onClick={(e) => e.target.classList.toggle("hidden")}>
+          Sign in
+            <div className="log-element hidden" >
+            <GoogleLogin
+              clientId={config.GOOGLE_CLIENT_ID}
+              buttonText="Google Login"
+              onSuccess={this.googleResponse}
+              onFailure={this.googleResponse}
+            />
+            </div>
+          </div>
         </div>
       );
 
     return (
-      <div><h1>Login</h1>
+      <div className="navtile" >
         {content}
       </div>
     );
