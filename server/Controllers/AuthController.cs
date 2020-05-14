@@ -18,7 +18,7 @@ using Server_GM_IMP.Utils;
 
 namespace Server_GM_IMP.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
     {
