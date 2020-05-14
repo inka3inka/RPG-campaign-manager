@@ -40,6 +40,7 @@ namespace Server_GM_IMP.Utils
             }
             catch (Exception ex)
             {
+                throw ex;
                 //SimpleLogger.Log(ex);
             }
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);

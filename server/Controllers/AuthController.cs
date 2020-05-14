@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Server_GM_IMP.Models;
 using Server_GM_IMP.Services;
@@ -27,15 +28,15 @@ namespace Server_GM_IMP.Controllers
         private readonly ILogger<AuthController> _logger;
 
         public AuthController(
-            IAuthService authService, 
-            IConfiguration configuration,
+            IAuthService authService,
+            IOptions<ServerConfiguration> serverConfiguration,
             ILogger<AuthController> logger)
         {
             _authService = authService;
-            _serverConfiguration = configuration.Get<ServerConfiguration>();
+            _serverConfiguration = serverConfiguration.Value;
             _logger = logger;
         }
-
+        
         [AllowAnonymous]
         [HttpPost("google")]
         public async Task<IActionResult> Google([FromBody]UserView userView)

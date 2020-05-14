@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Server_GM_IMP.Models;
 using Server_GM_IMP.Models.Users;
 using Server_GM_IMP.Services;
 using Swashbuckle.AspNetCore.Swagger;
@@ -27,10 +28,25 @@ namespace Server_GM_IMP
 
         public IConfiguration Configuration { get; }
 
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:3001")
+                                        .AllowAnyMethod()
+                                        .AllowAnyHeader();
+                                  });
+            });
+
             services.AddControllers();
+
+            services.Configure<ServerConfiguration>(Configuration.GetSection("AppSettings"));
 
             services.AddSwaggerGen(
                 options =>
@@ -80,6 +96,8 @@ namespace Server_GM_IMP
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthentication();
             app.UseAuthorization();
