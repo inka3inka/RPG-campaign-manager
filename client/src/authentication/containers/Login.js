@@ -47,9 +47,10 @@ class Login extends Component {
       ) :
       (
         <div>
-          <div onClick={(e) => e.target.classList.toggle("hidden")}>
+          <div >
+            /*onClick={(e) => e.target.classList.toggle("hidden")}*/
           Sign in
-            <div className="log-element hidden" >
+            <div className="log-element" >
             <GoogleLogin
               clientId={config.GOOGLE_CLIENT_ID}
               buttonText="Google Login"
