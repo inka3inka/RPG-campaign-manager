@@ -50,7 +50,7 @@ namespace Server_GM_IMP.Controllers
                 var claims = new[]
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt(_serverConfiguration.JwtEmailEncryption,user.email)),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
                 var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_serverConfiguration.JwtSecret));
