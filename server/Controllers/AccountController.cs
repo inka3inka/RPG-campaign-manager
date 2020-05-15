@@ -22,7 +22,6 @@ namespace Server_GM_IMP.Controllers
     {
         private readonly UsersDbContext _dbContext;
         private readonly ServerConfiguration _serverConfiguration;
-        private readonly UsersDbContext _usersDbContext;
 
         public AccountController(
             UsersDbContext usersDbContext,
@@ -38,7 +37,10 @@ namespace Server_GM_IMP.Controllers
             await Task.Delay(1);
             var encryptedEmail = User.Claims.Where(c => c.Type == JwtRegisteredClaimNames.Sub).FirstOrDefault()?.Value;
             var email = Security.Decrypt(_serverConfiguration.JwtEmailEncryption, encryptedEmail);
-            return Ok();
+
+            var user = _dbContext.Users.Where(u => u.email == email).FirstOrDefault();
+
+            return Ok(user);
         }
     }
 }
