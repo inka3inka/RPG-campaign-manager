@@ -1,6 +1,7 @@
 const authReducer = (state = {
   user: '',
-  isAuthenticated: false
+  isAuthenticated: false,
+  isVisible: true
 }, action) => {
   switch (action.type) {
     case "LOGIN":
@@ -8,6 +9,9 @@ const authReducer = (state = {
       break;
     case "LOGOUT":
       state = { ...state, user: '', isAuthenticated: false };
+      break;
+    case "LOGIN_AUTH_OPTIONS":
+      isVisible ? state = {...state, isVisible: true} : state = {...state, isVisible: false};
       break;
     default:
       break;
