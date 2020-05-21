@@ -26,15 +26,18 @@ namespace Server_GM_IMP.Controllers
         private readonly IAuthService _authService;
         private readonly ServerConfiguration _serverConfiguration;
         private readonly ILogger<AuthController> _logger;
+        private readonly ISecurityFunctions _securityFunctions;
 
         public AuthController(
             IAuthService authService,
             IOptions<ServerConfiguration> serverConfiguration,
-            ILogger<AuthController> logger)
+            ILogger<AuthController> logger,
+            ISecurityFunctions securityFunctions)
         {
             _authService = authService;
             _serverConfiguration = serverConfiguration.Value;
             _logger = logger;
+            _securityFunctions = securityFunctions;
         }
         
         [AllowAnonymous]
@@ -44,12 +47,12 @@ namespace Server_GM_IMP.Controllers
             try
             {
                 _logger.LogDebug($"Authorization by google with user token {userView.tokenId}");
-                var payload = GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings()).Result;
+                var payload =await GoogleJsonWebSignature.ValidateAsync(userView.tokenId, new GoogleJsonWebSignature.ValidationSettings());
                 var user = await _authService.Authenticate(payload.Email, payload.Name);
 
                 var claims = new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, Security.Encrypt(_serverConfiguration.JwtEmailEncryption,user.email)),
+                    new Claim(JwtRegisteredClaimNames.Sub, _securityFunctions.Encrypt(_serverConfiguration.JwtEmailEncryption,user.email)),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Server_GM_IMP.Utils
 {
-    public class Security
+    public class SecurityFunctions : ISecurityFunctions
     {
-        public static string Encrypt(string key, string toEncrypt, bool useHashing = true)
+        public string Encrypt(string key, string toEncrypt, bool useHashing = true)
         {
             byte[] resultArray = null;
             try
@@ -46,7 +46,7 @@ namespace Server_GM_IMP.Utils
             return Convert.ToBase64String(resultArray, 0, resultArray.Length);
         }
 
-        public static string Decrypt(string key, string cipherString, bool useHashing = true)
+        public string Decrypt(string key, string cipherString, bool useHashing = true)
         {
             byte[] resultArray = null;
             try

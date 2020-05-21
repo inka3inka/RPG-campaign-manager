@@ -2,6 +2,7 @@
 using AutoFixture.AutoMoq;
 using AutoFixture.Xunit2;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Moq;
 using Server_GM_IMP.Models;
 using Server_GM_IMP.Models.Users;
@@ -13,6 +14,9 @@ using System.Linq;
 using System.Text;
 using Xunit;
 using System.Threading.Tasks;
+using System.Security.Claims;
+using Server_GM_IMP.Utils;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Server_GM_IMP_Tests.Services
 {
@@ -21,11 +25,18 @@ namespace Server_GM_IMP_Tests.Services
         private readonly AuthService _sut;
         private readonly IFixture _fixture;
         private readonly Mock<DbSet<User>> _usersDbSetMock;
+        private readonly Mock<ISecurityFunctions> _securityFunctionsMock;
+        private readonly ServerConfiguration _serverConfigurationMock;
+
         private readonly List<User> _usersInDatabase = new List<User>();
 
         public AuthServiceShould()
         {
             _fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
+            _serverConfigurationMock = _fixture.Freeze<ServerConfiguration>();
+            var configurationOptions = Options.Create(_serverConfigurationMock) ;
+            _fixture.Inject(configurationOptions);
+            _securityFunctionsMock = _fixture.Freeze<Mock<ISecurityFunctions>>();
 
             var queryableUsers = _usersInDatabase.AsQueryable();
 
@@ -41,7 +52,7 @@ namespace Server_GM_IMP_Tests.Services
             _fixture.Inject(usersDbContextMock.Object);
             _sut = _fixture.Create<AuthService>();
         }
-
+/*
         [Theory, AutoData]
         public async Task CreateANewUserIfUserWithGivenEMailIsNotPresent(string email)
         {
@@ -71,5 +82,28 @@ namespace Server_GM_IMP_Tests.Services
             _usersDbSetMock.Verify(x => x.Add(It.IsAny<User>()), Times.Never());
             user.email.Should().Be(email);
         }
+
+        [Theory, AutoData]
+        public async Task ReturnUserFromUserIdentity(string email, string encryptedEmail)
+        {
+            //Populate database
+            var testUser = _fixture.Create<User>();
+            testUser.email = email;
+            _usersInDatabase.Add(testUser);
+            //Prepare user
+            var encodedEmail = _securityFunctionsMock.Setup(x => x.Decrypt(_serverConfigurationMock.JwtSecret, email, true)).Returns(email);
+            var userIdentity = new Mock<ClaimsPrincipal>();
+            var mockClaims = new List<Claim>
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, encryptedEmail)
+            };
+            userIdentity.Setup(u => u.Claims).Returns(mockClaims);
+
+            //Test
+            var returnedUsed = await _sut.GetUserFromClaim(userIdentity.Object);
+
+            returnedUsed.Should().Be(testUser);
+        }
+        */
     }
 }
