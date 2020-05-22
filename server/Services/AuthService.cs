@@ -36,7 +36,7 @@ namespace Server_GM_IMP.Services
             {
                 return user;
             }
-
+            
             var newUser = new User { email = email, name = userName };
             _usersDbContext.Users.Add(newUser);
             await _usersDbContext.SaveChangesAsync();

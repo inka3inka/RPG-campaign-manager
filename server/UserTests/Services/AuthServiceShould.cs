@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Security.Claims;
 using Server_GM_IMP.Utils;
 using System.IdentityModel.Tokens.Jwt;
+using Server_GM_IMP_Tests.Utils;
 
 namespace Server_GM_IMP_Tests.Services
 {
@@ -40,11 +41,7 @@ namespace Server_GM_IMP_Tests.Services
 
             var queryableUsers = _usersInDatabase.AsQueryable();
 
-            _usersDbSetMock = new Mock<DbSet<User>>();
-            _usersDbSetMock.As<IQueryable<User>>().Setup(m => m.Provider).Returns(queryableUsers.Provider);
-            _usersDbSetMock.As<IQueryable<User>>().Setup(m => m.Expression).Returns(queryableUsers.Expression);
-            _usersDbSetMock.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(queryableUsers.ElementType);
-            _usersDbSetMock.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(queryableUsers.GetEnumerator());
+            _usersDbSetMock = TestFunctions.GetDbSet(queryableUsers);
 
             var usersDbContextMock = new Mock<UsersDbContext>();
             usersDbContextMock.Setup(x => x.Users).Returns(_usersDbSetMock.Object);
@@ -52,7 +49,7 @@ namespace Server_GM_IMP_Tests.Services
             _fixture.Inject(usersDbContextMock.Object);
             _sut = _fixture.Create<AuthService>();
         }
-/*
+
         [Theory, AutoData]
         public async Task CreateANewUserIfUserWithGivenEMailIsNotPresent(string email)
         {
@@ -90,8 +87,9 @@ namespace Server_GM_IMP_Tests.Services
             var testUser = _fixture.Create<User>();
             testUser.email = email;
             _usersInDatabase.Add(testUser);
+
             //Prepare user
-            var encodedEmail = _securityFunctionsMock.Setup(x => x.Decrypt(_serverConfigurationMock.JwtSecret, email, true)).Returns(email);
+            _securityFunctionsMock.Setup(x => x.Decrypt(_serverConfigurationMock.JwtEmailEncryption, encryptedEmail, true)).Returns(email);
             var userIdentity = new Mock<ClaimsPrincipal>();
             var mockClaims = new List<Claim>
             {
@@ -104,6 +102,5 @@ namespace Server_GM_IMP_Tests.Services
 
             returnedUsed.Should().Be(testUser);
         }
-        */
     }
 }
