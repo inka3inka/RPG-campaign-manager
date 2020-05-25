@@ -20,7 +20,7 @@ namespace Server_GM_IMP.Controllers
     [Route("v1/[controller]")]
     [Authorize]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly UsersDbContext _dbContext;
         private readonly ServerConfiguration _serverConfiguration;
@@ -46,7 +46,22 @@ namespace Server_GM_IMP.Controllers
         [HttpPut("Current")]
         public async Task<IActionResult> PutCurrent(User user)
         {
-            throw new NotImplementedException();
+            var authorizedUser = await _authService.GetUserFromClaim(User);
+            if(authorizedUser == null || authorizedUser.email != user.email)
+            {
+                return BadRequest();
+            }
+
+            var currentUser = _dbContext.Users.Where(u => u.email == user.email).FirstOrDefault();
+            if(currentUser == null)
+            {
+                return Conflict();
+            }
+
+            currentUser.name = user.name;
+            await _dbContext.SaveChangesAsync();
+
+            return Ok(currentUser);
         }
     }
 }
