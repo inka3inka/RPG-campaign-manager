@@ -80,7 +80,7 @@ namespace Server_GM_IMP_Tests.Controllers
 
             var response = await _sut.PutCurrent(modifiedUser);
             
-            (response as StatusCodeResult).StatusCode.Should().Be((int)HttpStatusCode.OK);
+            (response as ObjectResult).StatusCode.Should().Be((int)HttpStatusCode.OK);
         }
 
         [Theory]

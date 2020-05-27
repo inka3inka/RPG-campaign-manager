@@ -30,7 +30,7 @@ namespace Server_GM_IMP.Models
             var rhs = obj as User;
             return Id == rhs.Id
                 && name == rhs.name
-                && email == rhs.name;
+                && email == rhs.email;
         }
 
         // override object.GetHashCode
